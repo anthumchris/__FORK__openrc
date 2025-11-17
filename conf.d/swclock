@@ -4,3 +4,4 @@
 # uncomment it. If you are using the default and have /var on its own
 # file system, you need to add the appropriate rc_after setting.
 # swclock_file=/var/lib/misc/openrc-shutdowntime
+swclock_file=/mnt/sda2/swclock.state

@@ -1,4 +1,4 @@
-#!@SBINDIR@/openrc-run
+#!/sbin/openrc-run
 # Copyright (c) 2009-2015 The OpenRC Authors.
 # See the Authors file at the top-level directory of this distribution and
 # https://github.com/OpenRC/openrc/blob/HEAD/AUTHORS
@@ -11,6 +11,7 @@
 
 description="Sets the local clock to the mtime of a given file."
 swclock_file="${swclock_file:-/var/lib/misc/openrc-shutdowntime}"
+PREFIX="[:: swclock ::]"
 
 depend()
 {
@@ -22,16 +23,24 @@ depend()
 
 start()
 {
-	ebegin "Setting the local clock based on last shutdown time"
+	ebegin "$PREFIX Setting - ${swclock_file} is readable?"
+	[ -r ${swclock_file} ]
+	eend $?
+
+	ebegin "$PREFIX Setting the local clock based on last shutdown time"
 	if ! swclock "${swclock_file}" 2> /dev/null; then
-	swclock --warn @SBINDIR@/openrc-run
+	swclock --warn /sbin/openrc-run
 	fi
 	eend $?
 }
 
 stop()
 {
-	ebegin "Saving the shutdown time"
+	ebegin "$PREFIX Saving - ${swclock_file} is writable?"
+	[ -w ${swclock_file} ]
+	eend $?
+
+	ebegin "$PREFIX Saving the shutdown time"
 	swclock --save "${swclock_file}"
 	eend $?
 }
